@@ -42,5 +42,5 @@ nosetests.xml
 .venv
 .env
 .vscode
-.gitignore_org.txt
+.gitignore_github.txt
 .gitignore_heroku.txt
