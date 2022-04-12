@@ -40,7 +40,7 @@ class LocalConfig(Config):
 class HerokuConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.environ.get('CLEARDB_DATABASE_URL')
     SQLALCHEMY_ECHO = "debug"
-    MAIL_SERVER = os.environ.get('SENDGRID_MAIL_SERVER', 'smtp.mailtrap.io')
+    MAIL_SERVER = os.environ.get('SENDGRID_MAIL_SERVER', 'smtp.sendgrid.net')
     MAIL_PORT = int(os.environ.get('SENDGRID_MAIL_PORT', '587'))
     MAIL_USE_TLS = os.environ.get('SENDGRID_MAIL_USE_TLS', 'true')
     # MAIL_USE_SSL = os.environ.get('MAILTRAP_MAIL_USE_SSL', 'false')   
