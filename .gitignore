@@ -42,7 +42,7 @@ nosetests.xml
 .venv
 .env
 .vscode
-envars.txt
+envvars.txt
 heroku_configvars.txt
 migrations_8h
 migrations_8d
