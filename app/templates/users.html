@@ -1,10 +1,18 @@
 {% extends "base.html" %}
+{% import "_macros.html" as macros %}
 
 {% macro render_user(user) %}
 <tr>
 <td>{{ user.name }}</td>
 <td>{{ user.email }}</td>
-<td><button class="btn btn-primary" onClick="lisaarivi(event,this);">Tallenna</button></td>
+<td class="td-keskitetty">
+<input type="hidden" value="{{ user.id }}" name="users">
+<input type="checkbox" {{ 'checked="checked"' if user.active }} value="{{ user.id }}" name="active">
+</td>
+<td class="td-keskitetty">
+<a title="poista" class="trash-space" href="#" onclick="poista('{{ user.id }}','{{ user.name }}')">
+<i class="fas fa-trash-alt"></i></a>
+</td>
 </tr>
 {% endmacro %}
 
@@ -23,15 +31,20 @@
 <div class="page-header">
     <h1>Users</h1>
     {% if current_user.is_administrator() %}
-    <form>
+    <form method="POST">
     <table class="table table-striped">
-    <tr><th>Name</th><th colspan="2">Email</th></tr>    
+    <tr><th>Name</th><th>Email</th><th>Aktiivinen</th><th>Poista</th></tr>    
         {% for user in users %}
         {{ render_user(user) }}
         {% endfor %}
     </table>
+    <input class="btn btn-primary" type="submit" name="painike" value="Tallenna">
     </form>
-
+    {% if pagination %}
+    <div class="pagination">
+    {{ macros.pagination_widget(pagination, '.users') }}
+    </div>
+    {% endif %}
     {% endif %}
 </div>
 

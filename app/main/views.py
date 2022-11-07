@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for, abort, flash
+from flask import render_template, redirect, url_for, abort, flash, current_app, request
 from flask_login import login_required, current_user
 from . import main
 from .forms import EditProfileForm, EditProfileAdminForm
@@ -67,5 +67,15 @@ def edit_profile_admin(id):
 @login_required
 @admin_required
 def users():
-    users = User.query.all()
-    return render_template('users.html', users=users)
+    # users = User.query.all() 
+    if request.form.get('painike'):
+        return str(request.form.getlist('users')) + \
+               "<br>" + \
+                str(request.form.getlist('active'))
+    page = request.args.get('page', 1, type=int)
+    pagination = User.query.order_by(User.name).paginate(
+        page, per_page=current_app.config['SP_POSTS_PER_PAGE'],
+        error_out=False)
+    lista = pagination.items
+    return render_template('users.html',users=lista,pagination=pagination,page=page)
+

@@ -15,6 +15,7 @@ class Config:
     SP_MAIL_SENDER = 'Flaskprojekti Admin <flaskprojekti@example.com>'
     SP_ADMIN = os.environ.get('SP_ADMIN')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SP_POSTS_PER_PAGE = 25
 
     @staticmethod
     def init_app(app):

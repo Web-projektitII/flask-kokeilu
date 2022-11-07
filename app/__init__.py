@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_bootstrap import Bootstrap
+from flask_fontawesome import FontAwesome
 from flask_mail import Mail
 from flask_moment import Moment
 from flask_sqlalchemy import SQLAlchemy
@@ -13,6 +14,7 @@ if 'DYNO' in os.environ:
 else:
     db = SQLAlchemy()
 bootstrap = Bootstrap()
+fa = FontAwesome()
 mail = Mail()
 moment = Moment()
 login_manager = LoginManager()
@@ -25,6 +27,7 @@ def create_app(config_name):
 
     # print(config[config_name].SQLALCHEMY_DATABASE_URI)
     bootstrap.init_app(app)
+    fa.init_app(app)
     mail.init_app(app)
     moment.init_app(app)
     db.init_app(app)
