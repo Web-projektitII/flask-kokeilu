@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for, abort, flash, current_app, request
+from flask import render_template, redirect, jsonify, url_for, abort, flash, current_app, request
 from flask_login import login_required, current_user
 from . import main
 from .forms import EditProfileForm, EditProfileAdminForm
@@ -97,4 +97,18 @@ def users():
         error_out=False)
     lista = pagination.items
     return render_template('users.html',users=lista,pagination=pagination,page=page)
+
+@main.route('/poista', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def poista():
+    # print("POISTA:"+request.form.get('id'))
+    user = User.query.get(request.form.get('id'))
+    if user is not None:
+        db.session.delete(user)
+        db.session.commit()
+        flash(f"Käyttäjä {user.name} on poistettu")
+        return jsonify("OK, käyttäjä on poistettu.")
+    else:
+        return jsonify("Virhe: käyttäjää ei löydy.")
 

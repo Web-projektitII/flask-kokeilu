@@ -7,11 +7,13 @@
 <td>{{ user.email }}</td>
 <td class="td-keskitetty">
 <input type="hidden" value="{{ user.id }}" name="users">
-<input type="checkbox" {{ 'checked="checked"' if user.active }} value="{{ user.id }}" name="active">
+<input type="checkbox" {{ 'checked' if user.active }} {{ 'disabled' if current_user.id == user.id }} value="{{ user.id }}" name="active">
 </td>
 <td class="td-keskitetty">
+{% if current_user.id != user.id %}    
 <a title="poista" class="trash-space" href="#" onclick="poista('{{ user.id }}','{{ user.name }}')">
 <i class="fas fa-trash-alt"></i></a>
+{% endif %}
 </td>
 </tr>
 {% endmacro %}
@@ -20,18 +22,30 @@
 {% block page_content %}
 
 <script>
-    function lisaarivi(e,el){
-    e.preventDefault();
-    let taulu = document.querySelector(".table");
-    let rivi = el.parentNode.parentNode.cloneNode(true);
-    taulu.appendChild(rivi);
-    }     
+function poista(id,nimi){
+let url = "{{ url_for('main.poista') }}";
+if (confirm("Poistetaanko "+nimi+"?")){
+  let formdata = new FormData();
+  formdata.append('id', id);
+  fetch(url, {
+    method: 'POST',
+    body: formdata
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Vastaus:',JSON.stringify(data))
+      location.reload()  
+      })
+    .catch(error => console.log(error));
+  }
+return false;
+}     
 </script>
 
 <div class="page-header">
     <h1>Users</h1>
     {% if current_user.is_administrator() %}
-    <form method="POST">
+    <form id="lomake" method="POST">
     <table class="table table-striped">
     <tr><th>Name</th><th>Email</th><th>Aktiivinen</th><th>Poista</th></tr>    
         {% for user in users %}
