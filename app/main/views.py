@@ -69,9 +69,28 @@ def edit_profile_admin(id):
 def users():
     # users = User.query.all() 
     if request.form.get('painike'):
-        return str(request.form.getlist('users')) + \
-               "<br>" + \
-                str(request.form.getlist('active'))
+
+        query_start = "INSERT INTO users (id,active) VALUES "
+        query_end = " ON DUPLICATE KEY UPDATE active = VALUES(active)"
+        query_values = ""
+        users = request.form.getlist('users')
+        active = request.form.getlist('active')
+        for v in users:
+            if v in active:
+                query_values += "("+v+",1),"
+            else:
+                query_values += "("+v+",0),"
+        query_values = query_values[:-1]
+        query = query_start + query_values + query_end
+        # print("\n"+query+"\n")
+        # result = db.session.execute('SELECT * FROM my_table WHERE my_column = :val', {'val': 5})
+        db.session.execute(query)
+        db.session.commit()
+        # print("RESULT") 
+        # return query
+        #return str(request.form.getlist('users')) + \
+        #       "<br>" + \
+        #        str(request.form.getlist('active'))
     page = request.args.get('page', 1, type=int)
     pagination = User.query.order_by(User.name).paginate(
         page, per_page=current_app.config['SP_POSTS_PER_PAGE'],
